@@ -61,9 +61,9 @@ Route::group(['middleware' => 'authorize','prefix' => 'project'],function (){
 
 Route::group(['middleware' => 'authorize','prefix' => 'docs'],function (){
     //文档编辑首页
-    Route::get('edit/{id}',[
+    Route::get('edit/{id}/{docid?}',[
         'as' => 'document.index', 'uses' => 'DocumentController@index'
-    ])->where('id', '[0-9]+');
+    ])->where(['id' => '[0-9]+', 'docid' => '[0-9]+']);
 
     //编辑文档
     Route::get('content/{id}',[

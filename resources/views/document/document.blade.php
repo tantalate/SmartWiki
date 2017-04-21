@@ -26,7 +26,8 @@
     <script src="{{asset('static/scripts/jquery.min.js')}}"></script>
     <script type="text/javascript">
         window.CONFIG = {
-            "project_id" : "{{$project_id}}"
+            "project_id" : "{{$project_id}}",
+            "document_id" : {{$document_id}},
         };
         window.treeCatalog = {};
     </script>
@@ -208,17 +209,20 @@
             }
         }).on('loaded.jstree', function () {
             window.treeCatalog = $(this).jstree();
-            $select_node_id = window.treeCatalog.get_selected();
-            if($select_node_id) {
-                $select_node = window.treeCatalog.get_node($select_node_id[0])
-                if ($select_node) {
-                    $select_node.node = {
-                        id: $select_node.id
-                    };
-
-                    window.loadDocument($select_node);
+            var $select_node;
+            if(window.CONFIG.document_id > 0){
+                $select_node = {id: window.CONFIG.document_id};
+            }else{
+                var $selected_nodes = window.treeCatalog.get_selected(true);
+                console.log($selected_nodes);
+                if($selected_nodes) {
+                    $select_node = $selected_nodes[0];
                 }
             }
+            window.loadDocument({node: $select_node});
+            window.treeCatalog.deselect_all();
+            window.treeCatalog.select_node($select_node.id);
+
 
         }).on('select_node.jstree', function (node, selected, event) {
             if($("#markdown-save").hasClass('change')) {

@@ -22,7 +22,7 @@ class DocumentController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index($id)
+    public function index($id, $docid=0)
     {
         if(empty($id) or $id <= 0){
             abort(404);
@@ -44,6 +44,7 @@ class DocumentController extends Controller
         }
         $this->data['project_id'] = $id;
         $this->data['project'] = $project;
+        $this->data['document_id'] = $docid;
         $this->data['json'] = json_encode($jsonArray,JSON_UNESCAPED_UNICODE);
 
 
@@ -442,7 +443,8 @@ class DocumentController extends Controller
             abort(403);
         }
 
-        $this->data['project'] = Project::getProjectFromCache($doc->project_id);
+        $this->data['project'] = $project;
+        $this->data['document'] = $doc;
 
         $this->data['tree'] = Project::getProjectHtmlTree($doc->project_id,$doc->doc_id);
         $this->data['title'] = $doc->doc_name;
@@ -463,6 +465,8 @@ class DocumentController extends Controller
             return $this->jsonResult(0,$this->data);
         }
 
+        $this->data['can_edit'] = Project::hasProjectEdit($project->project_id,$this->member_id);
+        //dump($this->data);
         return view('home.kancloud',$this->data);
     }
 

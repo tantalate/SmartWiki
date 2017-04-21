@@ -37,21 +37,23 @@
                 {{$project->project_name}}
                 <span style="font-size: 12px;font-weight: 100;">v {{$project->version}}</span>
             </div>
-            <div class="navbar-header pull-right manual-menu">
-                <div class="dropdown">
-                    <button id="dLabel" class="btn btn-default" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        项目
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel">
-                        @if($project->project_open_state ==1 || $project->project_open_state ==2)
-                            <li><a href="javascript:" data-toggle="modal" data-target="#shareProject">项目分享</a> </li>
-                            <li role="presentation" class="divider"></li>
-                        @endif
-                        <li><a href="{{route('document.export',['id' => $project->project_id])}}" target="_blank">项目导出</a> </li>
-                        <li><a href="{{route('home.index')}}" title="返回首页">返回首页</a> </li>
-                    </ul>
-                </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav pull-right manual-menu">
+                    @if($can_edit)
+                    <li><a class="menu-edit-doc" href="{{route('document.index',['id' => $project->project_id, 'docid' => $document->doc_id])}}">编辑</a></li>
+                    @endif
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">项目<span class="caret"></span></a>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel">
+                            @if($project->project_open_state ==1 || $project->project_open_state ==2)
+                                <li><a href="javascript:" data-toggle="modal" data-target="#shareProject">项目分享</a> </li>
+                                <li role="presentation" class="divider"></li>
+                            @endif
+                            <li><a href="{{route('document.export',['id' => $project->project_id])}}" target="_blank">项目导出</a> </li>
+                            <li><a href="{{route('home.index')}}" title="返回首页">返回首页</a> </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </header>
@@ -74,8 +76,7 @@
             </div>
             <div class="m-copyright">
                 <p>
-                    本文档使用
-                    <a href="https://www.iminho.me" target="_blank">SmartWiki</a> 发布
+                    本文档使用SmartWiki发布
                 </p>
             </div>
         </div>
@@ -217,6 +218,9 @@
                         events.data('body_' + selected.node.id,body);
                         events.data('title_' + selected.node.id,title);
                         events.data('doc_title_' + selected.node.id,doc_title);
+
+                        var edit_url = $(".menu-edit-doc").attr('href');
+                        $(".menu-edit-doc").attr('href', edit_url.replace(/\d+$/, selected.node.id));
 
                         events.trigger('article.open',url,false);
 
