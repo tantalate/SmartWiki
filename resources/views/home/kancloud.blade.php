@@ -220,7 +220,9 @@
                         events.data('doc_title_' + selected.node.id,doc_title);
 
                         var edit_url = $(".menu-edit-doc").attr('href');
-                        $(".menu-edit-doc").attr('href', edit_url.replace(/\d+$/, selected.node.id));
+                        if(edit_url){
+                            $(".menu-edit-doc").attr('href', edit_url.replace(/\d+$/, selected.node.id));
+                        }
 
                         events.trigger('article.open',url,false);
 
