@@ -329,23 +329,23 @@ class DocumentController extends Controller
         //如果上传的是图片
         if(isset($_FILES['editormd-image-file'])){
             //如果没有开启图片上传
-            if(!env('UPLOAD_IMAGE_ENABLE','0')){
+            if(! config('settings.upload_image_enable')){
                 $data['success'] = 0;
                 $data['message'] = '没有开启图片上传功能';
                 return $this->response->json($data);
             }
             $file = $this->request->file('editormd-image-file');
-            $allowExt = explode('|',env('UPLOAD_IMAGE_EXT','jpg|jpeg|gif|png'));
+            $allowExt = explode('|',config('settings.upload_image_ext','jpg|jpeg|gif|png'));
         }elseif(isset($_FILES['editormd-file-file'])){
             //如果没有开启文件上传
-            if(!env('UPLOAD_FILE_ENABLE','0')){
+            if(!config('settings.upload_file_enable','0')){
                 $data['success'] = 0;
                 $data['message'] = '没有开启文件上传功能';
                 return $this->response->json($data);
             }
 
             $file = $this->request->file('editormd-file-file');
-            $allowExt = explode('|',env('UPLOAD_FILE_EXT','txt|doc|docx|xls|xlsx|ppt|pptx|pdf|7z|rar'));
+            $allowExt = explode('|',config('settings.upload_file_ext','txt|doc|docx|xls|xlsx|ppt|pptx|pdf|7z|rar'));
         }
         $dirPath = public_path('uploads/' . date('Ym'));
         //如果目标目录不能创建
